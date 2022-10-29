@@ -18,12 +18,22 @@ const Form = () => {
 
   let filteredCities = [], mappedCities = [];
   if (countriesList && selectedCountry) {
-    filteredCities = countriesList.find(country => country.code === selectedCountry).cities?.sort((a, b) => a.name.localeCompare(b.name));
+    let foundCounter = 0;
+    for (let country of countriesList) {
+      if (selectedCountry.find(selectedCountryCode => selectedCountryCode === country.code)) {
+        filteredCities.push(...country.cities);
+        ++foundCounter;
+      }
+      if (foundCounter === selectedCountry.length) break;
+    }
+    filteredCities.sort((a, b) => a.name.localeCompare(b.name));
     mappedCities = filteredCities.map(({ country_code, name, id }) => <option key={id} value={country_code}>{name}</option>);
   }
 
+  const submitHandler = data => console.log(data);
+
   return (
-    <form action="#" method="POST">
+    <form onSubmit={handleSubmit(submitHandler)}>
       <div className="overflow-hidden shadow sm:rounded-md">
         <div className="bg-white px-4 py-5 sm:p-6">
           <div className="grid grid-cols-6 gap-6">
@@ -80,12 +90,13 @@ const Form = () => {
                 País
               </label>
               <select
+                multiple
                 disabled={!countriesList}
                 id="country"
                 className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 {...register('pais')}
               >
-                {countriesList && countriesList.map(({ code, name, index }) => <option key={code} selected={index === 0} value={code}>{name}</option>)}
+                {countriesList && countriesList.map(({ code, name }) => <option key={code} value={code}>{name}</option>)}
               </select>
             </div>
 
@@ -94,7 +105,8 @@ const Form = () => {
                 Cidade
               </label>
               <select
-                disabled={!selectedCountry || filteredCities.length === 0}
+                disabled={!countriesList && selectedCountry && !selectedCountry?.length === 0}
+                multiple
                 id="city"
                 className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 {...register('cidade')}
