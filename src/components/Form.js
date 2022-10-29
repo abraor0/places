@@ -2,9 +2,22 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getAvailableCountriesAndCities } from '../apis';
+import { cityValidation, countryValidation, cpfValidation, emailValidation, nameValidation, telephoneValidation } from '../validations';
+import { formatPhone, formatCPF } from '../utils';
 
 const Form = () => {
-  const { register, handleSubmit, watch } = useForm();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    defaultValues: {
+      nome: '',
+      email: '',
+      telefone: '',
+      cpf: '',
+      pais: ['BR'],
+      cidade: []
+    }
+  });
+  const { ref: telRef, onChange: telOnChange, onBlur: telOnBlur, name: telName } = register('telefone', { onChange: telephoneInputHandler, ...telephoneValidation });
+  const { ref: cpfRef, onChange: cpfOnChange, onBlur: cpfOnBlur, name: cpfName } = register('cpf', { onChange: cpfInputHandler, ...cpfValidation });
   const [countriesList, setCountriesList] = useState();
   const selectedCountry = watch('pais');
 
@@ -32,6 +45,16 @@ const Form = () => {
 
   const submitHandler = data => console.log(data);
 
+  function telephoneInputHandler(e) {
+    const formattedPhone = formatPhone(e.currentTarget.value);
+    e.currentTarget.value = formattedPhone;
+  };
+
+  function cpfInputHandler(e) {
+    const formattedCPF = formatCPF(e.currentTarget.value);
+    e.currentTarget.value = formattedCPF;
+  };
+
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
       <div className="overflow-hidden shadow sm:rounded-md">
@@ -45,8 +68,9 @@ const Form = () => {
                 type="text"
                 id="name"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                {...register('nome')}
+                {...register('nome', nameValidation)}
               />
+              <p className="text-xs text-red-500 mt-1">{errors.nome?.message}</p>
             </div>
 
             <div className="col-span-6 sm:col-span-3">
@@ -57,8 +81,9 @@ const Form = () => {
                 type="text"
                 id="email-address"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                {...register('email')}
+                {...register('email', emailValidation)}
               />
+              <p className="text-xs text-red-500 mt-1">{errors.email?.message}</p>
             </div>
 
             <div className="col-span-6 sm:col-span-3">
@@ -66,11 +91,15 @@ const Form = () => {
                 Telefone
               </label>
               <input
-                type="text"
+                type="tel"
                 id="telephone"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                {...register('telefone')}
+                ref={telRef}
+                name={telName}
+                onBlur={telOnBlur}
+                onChange={telOnChange}
               />
+              <p className="text-xs text-red-500 mt-1">{errors.telefone?.message}</p>
             </div>
 
             <div className="col-span-6 sm:col-span-3">
@@ -81,8 +110,12 @@ const Form = () => {
                 type="text"
                 id="cpf"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                {...register('cpf')}
+                ref={cpfRef}
+                name={cpfName}
+                onBlur={cpfOnBlur}
+                onChange={cpfOnChange}
               />
+              <p className="text-xs text-red-500 mt-1">{errors.cpf?.message}</p>
             </div>
 
             <div className="col-span-6 sm:col-span-3">
@@ -94,10 +127,11 @@ const Form = () => {
                 disabled={!countriesList}
                 id="country"
                 className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                {...register('pais')}
+                {...register('pais', countryValidation)}
               >
                 {countriesList && countriesList.map(({ code, name }) => <option key={code} value={code}>{name}</option>)}
               </select>
+              <p className="text-xs text-red-500 mt-1">{errors.pais?.message}</p>
             </div>
 
             <div className="col-span-6 sm:col-span-3">
@@ -109,10 +143,11 @@ const Form = () => {
                 multiple
                 id="city"
                 className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                {...register('cidade')}
+                {...register('cidade', cityValidation)}
               >
                 {mappedCities}
               </select>
+              <p className="text-xs text-red-500 mt-1">{errors.cidade?.message}</p>
             </div>
 
           </div>
