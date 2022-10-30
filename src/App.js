@@ -1,18 +1,25 @@
-import Form from './components/Form';
+import { useState } from 'react';
+import Place from './components/Place';
+import PlacesForm from './components/PlacesForm';
 
 function App() {
+  const [place, setPlace] = useState();
+
+  const addPlace = place => setPlace(place);
+
   return (
     <div className=" bg-gray-100">
-      <div className="mt-10 sm:mt-0">
-        <div className="md:grid md:grid-cols-3 md:gap-6">
-          <div className="md:col-span-1">
-            <div className="px-4 sm:px-0">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">Personal Information</h3>
-              <p className="mt-1 text-sm text-gray-600">Use a permanent address where you can receive mail.</p>
-            </div>
+      <div className="h-screen pt-10 px-6">
+        <div className="mb-10 sm:px-0 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold leading-6 text-indigo-500">Places</h1>
+          <p className="mt-1 text-base md:text-lg text-gray-700">Salves seus destinos de interesse.</p>
+        </div>
+        <div className="grid lg:grid-cols-3 gap-5">
+          <div className="lg:col-span-2 self">
+            <PlacesForm addPlace={addPlace} />
           </div>
-          <div className="mt-5 md:col-span-2 md:mt-0">
-            <Form />
+          <div className="lg:col-span-1 lg:-order-1 ">
+            <Place place={place} />
           </div>
         </div>
       </div>
