@@ -41,24 +41,10 @@ const PlacesForm = ({ addPlace }) => {
       if (foundCounter === selectedCountry.length) break;
     }
     filteredCities.sort((a, b) => a.name.localeCompare(b.name));
-    mappedCities = filteredCities.map(({ country_code, name, id }) => <option key={id} value={`${name}/${country_code}`}>{name}</option>);
+    mappedCities = filteredCities.map(({ country_code, name, id }) => <option key={id} value={`${name}`}>{name}</option>);
   }
 
-  const submitHandler = ({ nome, email, cpf, telefone, cidade, pais }) => {
-    const countryCityList = pais.reduce((list, country) => {
-
-    }, []);
-    console.log(cidade);
-
-    addPlace({
-      nome,
-      email,
-      cpf,
-      telefone,
-      cidade,
-      pais
-    });
-  };
+  const submitHandler = data => addPlace(data);
 
   function telephoneInputHandler(e) {
     const formattedPhone = formatPhone(e.currentTarget.value);

@@ -9,7 +9,7 @@ function App() {
 
   return (
     <div className=" bg-gray-100">
-      <div className="h-screen pt-10 px-6">
+      <div className="h-screen pt-10 px-3 sm:px-6">
         <div className="mb-10 sm:px-0 text-center">
           <h1 className="text-3xl md:text-4xl font-bold leading-6 text-indigo-500">Places</h1>
           <p className="mt-1 text-base md:text-lg text-gray-700">Salves seus destinos de interesse.</p>
