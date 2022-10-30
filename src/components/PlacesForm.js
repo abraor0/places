@@ -60,6 +60,10 @@ const PlacesForm = ({ addPlace }) => {
     <form onSubmit={handleSubmit(submitHandler)}>
       <Card className="overflow-hidden shadow sm:rounded-md">
         <div className="grid grid-cols-6 gap-6">
+          <div className="col-span-6 flex flex-row gap-5 items-center">
+            <h2 className="text-indigo-500 font-bold" >Dados Pessoais</h2>
+            <span className="h-[1px] bg-gray-200 grow"></span>
+          </div>
           <div className="col-span-6 sm:col-span-3">
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Nome
@@ -116,6 +120,11 @@ const PlacesForm = ({ addPlace }) => {
               onChange={cpfOnChange}
             />
             <p className="text-xs text-red-500 mt-1">{errors.cpf?.message}</p>
+          </div>
+
+          <div className="col-span-6 flex flex-row gap-5 items-center">
+            <h2 className="text-indigo-500 font-bold" >Destinos</h2>
+            <span className="h-[1px] bg-gray-200 grow"></span>
           </div>
 
           <div className="col-span-6 sm:col-span-3">
