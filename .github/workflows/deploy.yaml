@@ -1,0 +1,24 @@
+name: Build and Deploy to GH Pages
+on: workflow_dispatch
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Sets up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18    
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Builds page
+      run: CI=false npm run build
+    
+    - name: Deploy to GH Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        deploy_key: ${{ secrets.DEPLOY_KEY }}
+        publish_dir: ./build
